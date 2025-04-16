@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NBA Prospect Results</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #f0f0f0;
+      padding: 40px;
+      text-align: center;
+    }
+    .result-box {
+      max-width: 700px;
+      margin: auto;
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 12px;
+    }
+    h2 {
+      color: #ff9800;
+    }
+    canvas {
+      margin-top: 20px;
+      background: white;
+      border-radius: 10px;
+    }
+    .advice {
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="result-box">
+    <h2>🏀 Your NBA Prospect Report</h2>
+    <div id="results"></div>
+    <canvas id="radarChart" width="400" height="400"></canvas>
+    <div class="advice" id="advice"></div>
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("nbaFormData"));
+    if (!data) {
+      document.body.innerHTML = "No data found. Please go back and fill the form first.";
+    } else {
+      const {
+        fatherHeight, motherHeight, height, weight, ppg, rpg, apg, fg, three, ft, competition, position
+      } = data;
+
+      const h = parseFloat(height);
+      const p = parseFloat(ppg);
+      const r = parseFloat(rpg);
+      const a = parseFloat(apg);
+      const f = parseFloat(fg);
+      const t = parseFloat(three);
+      const ftPct = parseFloat(ft);
+
+      const estimatedHeight = ((parseFloat(fatherHeight) + parseFloat(motherHeight)) * 0.5) + 2.5 + 2;
+
+      let score = 0;
+      score += p * 2.5;
+      score += r * 1.5;
+      score += a * 1.5;
+      score += (f + t + ftPct) / 3 / 2;
+
+      const idealHeights = { PG: 72, SG: 75, SF: 78, PF: 80, C: 82 };
+      const idealHeight = idealHeights[position];
+
+      if (h >= idealHeight) score += 8;
+      else if (h >= idealHeight - 1) score += 4;
+      else score -= 4;
+
+      if (estimatedHeight >= idealHeight + 1) score += 6;
+      else if (estimatedHeight >= idealHeight) score += 3;
+
+      if (competition === "high") score += 10;
+      else if (competition === "medium") score += 4;
+
+      if (weight < 120 || weight > 300) score -= 3;
+
+      score = Math.max(0, Math.min(score, 100));
+
+      let odds;
+      if (score >= 90) odds = 0.02 + (score - 90) * 0.001;
+      else if (score >= 70) odds = 0.01 + (score - 70) * 0.0005;
+      else if (score >= 50) odds = 0.005 + (score - 50) * 0.00025;
+      else if (score >= 30) odds = 0.002 + (score - 30) * 0.00015;
+      else odds = 0.001 + (score * 0.000033);
+
+      odds = Math.min(odds, 0.03).toFixed(4);
+
+      let comp = "No match";
+      const comps = [
+        { name: "Davion Mitchell", position: "PG", height: 72, ppg: 14, tip: "Improve your defense and quickness." },
+        { name: "JJ Redick", position: "SG", height: 76, ppg: 20, tip: "Become a lethal shooter from deep." },
+        { name: "Draymond Green", position: "PF", height: 78, ppg: 10, tip: "Work on passing + defense." },
+        { name: "Jimmy Butler", position: "SF", height: 78, ppg: 22, tip: "Attack the basket and defend multiple positions." }
+      ];
+
+      let advice = "Train hard. Work on your weaknesses and stay consistent.";
+      for (let c of comps) {
+        if (position === c.position && h <= c.height + 1 && p >= c.ppg - 5) {
+          comp = `${c.name}`;
+          advice = `You're similar to ${c.name}. ${c.tip}`;
+          break;
+        }
+      }
+
+      // Display text
+      document.getElementById("results").innerText =
+        `Estimated Max Height: ${estimatedHeight.toFixed(1)} inches\n` +
+        `NBA Odds: ${odds}%\n` +
+        `Player Comparison: ${comp}`;
+
+      // Radar Chart
+      const ctx = document.getElementById("radarChart").getContext("2d");
+      new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Scoring', 'Shooting', 'Passing', 'Rebounding', 'Size'],
+          datasets: [{
+            label: 'Your Profile',
+            data: [p * 2, (f + t + ftPct) / 3, a * 2, r * 2, h],
+            backgroundColor: 'rgba(255,152,0,0.2)',
+            borderColor: '#ff9800'
+          }]
+        },
+        options: {
+          scales: {
+            r: {
+              suggestedMin: 0,
+              suggestedMax: 100
+            }
+          }
+        }
+      });
+
+      // Advice section
+      document.getElementById("advice").innerText = advice;
+    }
+  </script>
+</body>
+</html>
