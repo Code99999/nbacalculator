@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NBA Prospect Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+    .container {
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 600px;
+    }
+    h1 {
+      text-align: center;
+      color: #ff9800;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+    button {
+      background: #ff9800;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #ffa726;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏀 NBA Prospect Analyzer</h1>
+    <form id="nbaForm">
+      <label>Father's Height (in inches): <input type="number" id="fatherHeight" required></label>
+      <label>Mother's Height (in inches): <input type="number" id="motherHeight" required></label>
+      <label>Current Height (in inches): <input type="number" id="height" required></label>
+      <label>Weight (in lbs): <input type="number" id="weight" required></label>
+      <label>Points Per Game (PPG): <input type="number" id="ppg" required></label>
+      <label>Rebounds Per Game (RPG): <input type="number" id="rpg" required></label>
+      <label>Assists Per Game (APG): <input type="number" id="apg" required></label>
+      <label>Field Goal % (FG%): <input type="number" id="fg" required></label>
+      <label>Three Point % (3PT%): <input type="number" id="three" required></label>
+      <label>Free Throw % (FT%): <input type="number" id="ft" required></label>
+
+      <label>Level of Competition:
+        <select id="competition">
+          <option value="low">Low (Rec League / JV)</option>
+          <option value="medium">Medium (Varsity / Public HS)</option>
+          <option value="high">High (Prep / Elite AAU)</option>
+        </select>
+      </label>
+
+      <label>Position:
+        <select id="position">
+          <option value="PG">Point Guard</option>
+          <option value="SG">Shooting Guard</option>
+          <option value="SF">Small Forward</option>
+          <option value="PF">Power Forward</option>
+          <option value="C">Center</option>
+        </select>
+      </label>
+
+      <button type="submit">See My NBA Odds</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("nbaForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const ids = ["fatherHeight", "motherHeight", "height", "weight", "ppg", "rpg", "apg", "fg", "three", "ft", "competition", "position"];
+      const formData = {};
+      ids.forEach(id => {
+        formData[id] = document.getElementById(id).value;
+      });
+
+      localStorage.setItem("nbaFormData", JSON.stringify(formData));
+      window.location.href = "results.html";
+    });
+  </script>
+</body>
+</html>
