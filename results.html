@@ -5,6 +5,43 @@
   <title>NBA Prospect Results</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    <!-- Put at top of your <body> -->
+<img src="gif1.gif" class="background-gif" />
+<img src="gif2.gif" class="background-gif" />
+<img src="gif3.gif" class="background-gif" />
+
+<!-- Add to <style> in <head> -->
+.background-gif {
+  position: fixed;
+  width: 100px;
+  height: auto;
+  z-index: 1;
+  animation: bounce 8s infinite alternate;
+  opacity: 0.2;
+}
+.background-gif:nth-child(1) { top: 5%; left: 5%; }
+.background-gif:nth-child(2) { bottom: 10%; right: 10%; animation-duration: 12s; }
+.background-gif:nth-child(3) { top: 40%; left: 80%; animation-duration: 10s; }
+
+@keyframes bounce {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(20vw, 30vh); }
+  50% { transform: translate(-25vw, 10vh); }
+  75% { transform: translate(10vw, -10vh); }
+  100% { transform: translate(-10vw, -5vh); }
+}
+
+.result-box {
+  z-index: 10;
+  position: relative;
+  background: rgba(30, 30, 30, 0.96);
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 700px;
+  margin: auto;
+  box-shadow: 0 0 30px rgba(255, 152, 0, 0.25);
+}
+
     body {
       font-family: Arial, sans-serif;
       background: #121212;
