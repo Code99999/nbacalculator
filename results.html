@@ -5,8 +5,6 @@
   <title>NBA Prospect Results</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-   
-
     body {
       font-family: Arial, sans-serif;
       background: #121212;
@@ -33,6 +31,12 @@
       margin-top: 20px;
       font-size: 1.1em;
     }
+    .motivational-message {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #ff9800;
+      font-weight: bold;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -42,6 +46,7 @@
     <div id="results"></div>
     <canvas id="radarChart" width="400" height="400"></canvas>
     <div class="advice" id="advice"></div>
+    <div class="motivational-message" id="motivationalMessage"></div>
   </div>
 
   <script>
@@ -95,28 +100,10 @@
 
       odds = Math.min(odds, 0.03).toFixed(4);
 
-      let comp = "No match";
-      const comps = [
-        { name: "Davion Mitchell", position: "PG", height: 72, ppg: 14, tip: "Improve your defense and quickness." },
-        { name: "JJ Redick", position: "SG", height: 76, ppg: 20, tip: "Become a lethal shooter from deep." },
-        { name: "Draymond Green", position: "PF", height: 78, ppg: 10, tip: "Work on passing + defense." },
-        { name: "Jimmy Butler", position: "SF", height: 78, ppg: 22, tip: "Attack the basket and defend multiple positions." }
-      ];
-
-      let advice = "Train hard. Work on your weaknesses and stay consistent.";
-      for (let c of comps) {
-        if (position === c.position && h <= c.height + 1 && p >= c.ppg - 5) {
-          comp = `${c.name}`;
-          advice = `You're similar to ${c.name}. ${c.tip}`;
-          break;
-        }
-      }
-
       // Display text
       document.getElementById("results").innerText =
         `Estimated Max Height: ${estimatedHeight.toFixed(1)} inches\n` +
-        `NBA Odds: ${odds}%\n` +
-        `Player Comparison: ${comp}`;
+        `NBA Odds: ${odds}%`;
 
       // Radar Chart
       const ctx = document.getElementById("radarChart").getContext("2d");
@@ -141,8 +128,9 @@
         }
       });
 
-      // Advice section
-      document.getElementById("advice").innerText = advice;
+      // Motivational Message
+      const motivationalMessage = "Don't let the probability hold you back. Keep working hard, and remember, this is just an estimate!";
+      document.getElementById("motivationalMessage").innerText = motivationalMessage;
     }
   </script>
 </body>
